@@ -1,11 +1,8 @@
 import { assertEquals, assertStrictEquals, assertThrows } from "@std/assert";
 import { factorial, range } from "./utils.ts";
 
-import {
-  combinations,
-  combinationsWithReplacement,
-} from "../src/combinations.ts";
-import { permutations } from "../src/permutations.ts";
+import { combinations, combinationsWithReplacement } from "../mod.ts";
+import { permutations } from "../mod.ts";
 
 Deno.test("r = NaN", () => {
   assertThrows(

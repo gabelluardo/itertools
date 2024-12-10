@@ -1,7 +1,7 @@
 import { assertEquals, assertStrictEquals, assertThrows } from "@std/assert";
 
 import { factorial, range } from "./utils.ts";
-import { combinationsWithReplacement } from "../src/combinations.ts";
+import { combinationsWithReplacement } from "../mod.ts";
 
 Deno.test("r = NaN", () => {
   assertThrows(

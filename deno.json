@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "test-all": "deno test --watch"
+    "ok": "deno lint && deno fmt && deno test"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1"

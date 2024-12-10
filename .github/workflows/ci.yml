@@ -9,7 +9,7 @@ on:
     - cron: "0 0 * * 0"
 
 jobs:
-  build: 
+  fmt:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.canary }} # Continue in case the canary run does not succeed
     strategy:
@@ -53,8 +53,9 @@ jobs:
 
       - name: Test
         run: deno test --doc --allow-all --coverage=cov/
-      
+
       - name: Coverage
+        if: matrix.os == 'ubuntu-latest'
         run: deno coverage --lcov cov/ > cov.lcov
 
   bench:

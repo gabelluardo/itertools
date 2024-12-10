@@ -45,7 +45,7 @@ jobs:
       - uses: denoland/setup-deno@v2
 
       - name: Test
-        run: deno test --doc --allow-all --coverage=cov/
+        run: deno test --allow-all --coverage=cov/
 
       - name: Coverage
         if: matrix.os == 'ubuntu-latest'

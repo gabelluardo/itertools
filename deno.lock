@@ -60,7 +60,11 @@
     "https://deno.land/x/combinatorics@1.1.2/mod.ts": "f33c6ce1342a7ea5ce35fd80be9e4b413c672c63cee0c25549c1aba6baec899d",
     "https://deno.land/x/combinatorics@1.1.2/permutations.ts": "b02b79a979cff9641e6986910475d77abf57b51079590c5f8bbd226ccc09a9a4",
     "https://deno.land/x/combinatorics@1.1.2/permutations_with_replacement.ts": "4a90c4d86818ff877208d1eb19df4c6203d485904457a2ee85eb5269221836ec",
-    "https://deno.land/x/combinatorics@1.1.2/power_set.ts": "ea9b3d81cc87e1e37c81cfe71f2df8480d66352ec6d72dec47a14dea35bf6405"
+    "https://deno.land/x/combinatorics@1.1.2/power_set.ts": "ea9b3d81cc87e1e37c81cfe71f2df8480d66352ec6d72dec47a14dea35bf6405",
+    "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/mod.ts": "b223a0f0728b5ec9dbb466b4c127bd99b2d5cb94667fdbaf368b524bbb6f35b8",
+    "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/src/combinations.ts": "be88ffb9c1f23121f17ca6f48dcf099484c0980c8a33f7326d49fe9f8c033b21",
+    "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/src/permutations.ts": "1aa92f8dfa02bf92734f07370b43841264f5a9d208372fb4172b2960e54e6c92",
+    "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/src/utils.ts": "5295cfe2e9ad61e5f7a70cb5d84dfa2a4f5703559c33b6fc3d369fc48f87cfe3"
   },
   "workspace": {
     "dependencies": [

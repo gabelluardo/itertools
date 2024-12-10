@@ -1,4 +1,4 @@
-name: ci
+name: CI
 
 on:
   push:
@@ -9,21 +9,17 @@ on:
     - cron: "0 0 * * 0"
 
 jobs:
-  test:
+  build: 
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        deno: [canary]
+        deno: [v2.x, canary]
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
-      - name: Clone
-        uses: actions/checkout@v2
-
-      - name: Set-up
-        uses: denoland/setup-deno@v1.0.0
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1.0.0
         with:
           deno-version: ${{ matrix.deno }}
 
@@ -35,8 +31,36 @@ jobs:
       - name: Lint
         run: deno lint
 
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        deno: [v2.x, canary]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1.0.0
+        with:
+          deno-version: ${{ matrix.deno }}
+
       - name: Test
         run: deno test --doc
 
+  bench:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        deno: [v2.x, canary]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@v1.0.0
+        with:
+          deno-version: ${{ matrix.deno }}
+
       - name: Benchmark
-        run: deno --unstable bench
+        run: deno bench

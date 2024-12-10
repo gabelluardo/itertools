@@ -10,25 +10,17 @@ on:
 
 jobs:
   fmt:
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.canary }} # Continue in case the canary run does not succeed
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        deno-version: [v2.x]
-        canary: [false]
-        include:
-          - deno-version: canary
-            os: ubuntu-latest
-            canary: true
+
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
 
       - name: Format
-        # formatting is different
-        if: matrix.os != 'windows-latest'
         run: deno fmt --check
 
       - name: Lint
@@ -47,6 +39,7 @@ jobs:
           - deno-version: canary
             os: ubuntu-latest
             canary: true
+
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@v2
@@ -71,6 +64,7 @@ jobs:
           - deno-version: canary
             os: ubuntu-latest
             canary: true
+
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@v2

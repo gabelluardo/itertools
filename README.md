@@ -1,4 +1,4 @@
-# combinatorics
+# itertools
 
 <!-- [![docs](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/combinatorics/mod.ts) -->
 

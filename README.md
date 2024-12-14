@@ -3,6 +3,8 @@
 <!-- [![docs](https://doc.deno.land/badge.svg)](https://doc.deno.land/https/deno.land/x/combinatorics/mod.ts) -->
 
 [![Built with the Deno Standard Library](https://img.shields.io/badge/Built_with_std-blue?logo=deno)](https://jsr.io/@std)
+[![jsr.io/@gabelluardo/itertools](https://jsr.io/badges/@gabelluardo/itertools)](https://jsr.io/@gabelluardo/itertools)
+[![jsr.io/@gabelluardo/itertools score](https://jsr.io/badges/@gabelluardo/itertools/score)](https://jsr.io/@gabelluardo/itertools)
 [![codecov](https://codecov.io/github/gabelluardo/itertools/graph/badge.svg?token=9P9T76RVCY)](https://codecov.io/github/gabelluardo/itertools)
 [![ci](https://github.com/gabelluardo/itertools/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/gabelluardo/itertools/actions/workflows/ci.yml)
 
@@ -28,7 +30,7 @@ not matter and elements are chosen without replacement.
 
 ```ts
 import { assertEquals } from "@std/assert";
-import { combinations } from "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/mod.ts";
+import { combinations } from "jsr:@gabelluardo/itertools";
 
 const sequences = [...combinations([1, 2, 3, 4], 2)];
 
@@ -52,7 +54,7 @@ the length of the `iterable` is used.
 
 ```ts
 import { assertEquals } from "@std/assert";
-import { permutations } from "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/mod.ts";
+import { permutations } from "jsr:@gabelluardo/itertools";
 
 const sequences = [...permutations([1, 2, 3, 4], 2)];
 
@@ -79,7 +81,7 @@ important and elements are chosen with replacement.
 
 ```ts
 import { assertEquals } from "@std/assert";
-import { combinationsWithReplacement } from "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/mod.ts";
+import { combinationsWithReplacement } from "jsr:@gabelluardo/itertools";
 
 const sequences = [...combinationsWithReplacement([1, 2, 3, 4], 2)];
 
@@ -106,7 +108,7 @@ important and elements are chosen with replacement.
 
 ```ts
 import { assertEquals } from "@std/assert";
-import { permutationsWithReplacement } from "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/mod.ts";
+import { permutationsWithReplacement } from "jsr:@gabelluardo/itertools";
 
 const sequences = [...permutationsWithReplacement([1, 2, 3, 4], 2)];
 
@@ -139,7 +141,7 @@ provide the element at each index for the yielded `Array`.
 
 ```ts
 import { assertEquals } from "@std/assert";
-import { product } from "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/mod.ts";
+import { product } from "jsr:@gabelluardo/itertools";
 
 const sequences = [...product([1, 2, 3], [4, 5, 6], [7, 8, 9])];
 
@@ -182,7 +184,7 @@ first subset is the empty set given when `r = 0`.
 
 ```ts
 import { assertEquals } from "@std/assert";
-import { powerSet } from "https://raw.githubusercontent.com/gabelluardo/itertools/refs/heads/main/mod.ts";
+import { powerSet } from "jsr:@gabelluardo/itertools";
 
 const sequences = [...powerSet([1, 2, 3])];
 

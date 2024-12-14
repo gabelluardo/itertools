@@ -1,4 +1,8 @@
 {
+  "name": "@gabelluardo/itertools",
+  "version": "0.1.0",
+  "license": "MIT",
+  "exports": "./mod.ts",
   "tasks": {
     "ok": "deno lint && deno fmt && deno test --doc"
   },

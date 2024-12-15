@@ -1,6 +1,6 @@
 import { assertEquals, assertStrictEquals, assertThrows } from "@std/assert";
 
-import { pwr, range } from "./utils.ts";
+import { range } from "./utils.ts";
 import { permutationsWithReplacement } from "../mod.ts";
 
 Deno.test("r = NaN", () => {
@@ -145,7 +145,7 @@ for (let n = 0; n < 8; n++) {
   for (let r = 0; r < 6; r++) {
     Deno.test(`pwr(${n}, ${r})`, () => {
       const actual = [...permutationsWithReplacement(iterable, r)];
-      const expectedLength = pwr(n, r);
+      const expectedLength = n ** r;
       assertStrictEquals(actual.length, expectedLength);
     });
   }

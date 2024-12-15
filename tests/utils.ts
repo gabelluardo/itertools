@@ -21,8 +21,3 @@ export function factorial(n: number): number {
   }
   return result;
 }
-
-/** Calculate `n` to the power of `r`. */
-export function pwr(n: number, r: number): number {
-  return n ** r;
-}

@@ -25,8 +25,7 @@ inspired by the combinatorial iterators provided by the
 
 ### Simple Combinations
 
-Yields `r` length `Arrays` from the input `iterable`. Order of selection does
-not matter and elements are chosen without replacement.
+Returns `r-length` subsequences of elements from the input `iterable`. Order of selection does not matter and elements are chosen without replacement.
 
 ```ts
 import { assertEquals } from "@std/assert";
@@ -46,9 +45,7 @@ assertEquals(sequences, [
 
 ### Simple Permutations
 
-Yields `r` length `Arrays` from the input `iterable`. Order of selection is
-important and elements are chosen without replacement. If `r` is undefined, then
-the length of the `iterable` is used.
+Returns successive `r-length` permutations of elements from the `iterable`.
 
 <!-- deno-fmt-ignore -->
 
@@ -76,8 +73,7 @@ assertEquals(sequences, [
 
 ### Combinations with Replacement
 
-Yields `r` length `Arrays` from the input `iterable`. Order of selection is not
-important and elements are chosen with replacement.
+Returns `r-length` subsequences of elements from the input `iterable` allowing individual elements to be repeated more than once.
 
 ```ts
 import { assertEquals } from "@std/assert";
@@ -101,8 +97,7 @@ assertEquals(sequences, [
 
 ### Permutations with Replacement
 
-Yields `r` length `Arrays` from the input `iterable`. Order of selection is
-important and elements are chosen with replacement.
+Returns successive `r-length` permutations of elements from the `iterable` allowing individual elements to be repeated more than once.
 
 <!-- deno-fmt-ignore -->
 
@@ -132,12 +127,10 @@ assertEquals(sequences, [
 ]);
 ```
 
-### Cartesian Product
+<!-- ### Cartesian Product
 
 Roughly equivalent to running nested `for...of` loops using one of the inputs to
 provide the element at each index for the yielded `Array`.
-
-<!-- deno-fmt-ignore -->
 
 ```ts
 import { assertEquals } from "@std/assert";
@@ -174,9 +167,9 @@ assertEquals(sequences, [
   [3, 6, 8],
   [3, 6, 9],
 ]);
-```
+``` -->
 
-### Power Set
+<!-- ### Power Set
 
 The set of all subsets of the given `iterable`. Equivalent to running
 `combinations` with `0 <= r <= iterable.length` and flattening the results. The
@@ -189,4 +182,4 @@ import { powerSet } from "jsr:@gabelluardo/itertools";
 const sequences = [...powerSet([1, 2, 3])];
 
 assertEquals(sequences, [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]]);
-```
+``` -->

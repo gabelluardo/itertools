@@ -1,5 +1,5 @@
 export * from "./src/combinatoric.ts";
-export * from "./src/combinations.ts";
+export * from "./src/infinite.ts";
 
 // WIP
 export * from "./src/product.ts";

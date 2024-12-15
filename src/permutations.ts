@@ -8,7 +8,7 @@
  * The length of the output is given by `n!/(n-r)!` when `0 ≤ r ≤ n` or `zero` when `r > n`.
  *
  * The permutation arrays are emitted in lexicographic order according to the order
- * of the input `iterable`. If the input `iterable` is sorted, the output will be in
+ * of the input iterable. If the input iterable is sorted, the output will be in
  * sorted order.
  *
  * Elements are treated as unique based on their position, not on their value.
@@ -85,15 +85,15 @@ export function* permutations<T>(
 }
 
 /**
- * Returns successive `r-length` permutations of elements from the `iterable`. Order
- * of selection is important and elements are chosen with replacement.
+ * Returns successive `r-length` permutations of elements from the `iterable`
+ * allowing individual elements to be repeated more than once.
  *
  * @description
  * If `r` is not specified, then `r` defaults to the length of the `iterable` and all
  * possible full-length permutations are generated.
  *
  * The permutation arrays are emitted in lexicographic order according to the order
- * of the input `iterable`. If the input `iterable` is sorted, the output will be in
+ * of the input iterable. If the input iterable is sorted, the output will be in
  * sorted order.
  *
  * Elements are treated as unique based on their position, not on their value.

@@ -19,13 +19,13 @@ Deno.bench("permutations new (medium)", {
   group: "permutations medium",
   baseline: true,
 }, () => {
-  for (const _ of permutations(Array(10), 11));
+  for (const _ of permutations(Array(10), 8));
 });
 
 Deno.bench("permutations old (medium)", {
   group: "permutations medium",
 }, () => {
-  for (const _ of permutations1(Array(10), 11));
+  for (const _ of permutations1(Array(10), 8));
 });
 
 // Large input benchmarks
@@ -33,13 +33,13 @@ Deno.bench("permutations new (large)", {
   group: "permutations large",
   baseline: true,
 }, () => {
-  for (const _ of permutations(Array(14), 15));
+  for (const _ of permutations(Array(11), 10));
 });
 
 Deno.bench("permutations old (large)", {
   group: "permutations large",
 }, () => {
-  for (const _ of permutations1(Array(14), 15));
+  for (const _ of permutations1(Array(11), 10));
 });
 
 function* permutations1<T>(

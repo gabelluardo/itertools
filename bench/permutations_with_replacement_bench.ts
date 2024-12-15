@@ -19,13 +19,13 @@ Deno.bench("permutationsWithReplacement new (medium)", {
   group: "permutationsWithReplacement medium",
   baseline: true,
 }, () => {
-  for (const _ of permutationsWithReplacement(Array(10), 11));
+  for (const _ of permutationsWithReplacement(Array(6), 5));
 });
 
 Deno.bench("permutationsWithReplacement old (medium)", {
   group: "permutationsWithReplacement medium",
 }, () => {
-  for (const _ of permutationsWithReplacement1(Array(10), 11));
+  for (const _ of permutationsWithReplacement1(Array(6), 5));
 });
 
 // Large input benchmarks
@@ -33,13 +33,13 @@ Deno.bench("permutationsWithReplacement new (large)", {
   group: "permutationsWithReplacement large",
   baseline: true,
 }, () => {
-  for (const _ of permutationsWithReplacement(Array(14), 15));
+  for (const _ of permutationsWithReplacement(Array(10), 6));
 });
 
 Deno.bench("permutationsWithReplacement old (large)", {
   group: "permutationsWithReplacement large",
 }, () => {
-  for (const _ of permutationsWithReplacement1(Array(14), 15));
+  for (const _ of permutationsWithReplacement1(Array(10), 6));
 });
 
 function* permutationsWithReplacement1<T>(

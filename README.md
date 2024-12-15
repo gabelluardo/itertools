@@ -25,7 +25,8 @@ inspired by the combinatorial iterators provided by the
 
 ### Simple Combinations
 
-Returns `r-length` subsequences of elements from the input `iterable`. Order of selection does not matter and elements are chosen without replacement.
+Returns `r-length` subsequences of elements from the input `iterable`. Order of
+selection does not matter and elements are chosen without replacement.
 
 ```ts
 import { assertEquals } from "@std/assert";
@@ -73,7 +74,8 @@ assertEquals(sequences, [
 
 ### Combinations with Replacement
 
-Returns `r-length` subsequences of elements from the input `iterable` allowing individual elements to be repeated more than once.
+Returns `r-length` subsequences of elements from the input `iterable` allowing
+individual elements to be repeated more than once.
 
 ```ts
 import { assertEquals } from "@std/assert";
@@ -97,7 +99,8 @@ assertEquals(sequences, [
 
 ### Permutations with Replacement
 
-Returns successive `r-length` permutations of elements from the `iterable` allowing individual elements to be repeated more than once.
+Returns successive `r-length` permutations of elements from the `iterable`
+allowing individual elements to be repeated more than once.
 
 <!-- deno-fmt-ignore -->
 

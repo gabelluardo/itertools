@@ -321,14 +321,14 @@ export function* permutationsWithReplacement<T>(
 }
 
 /**
- * Generates the Cartesian product of input iterables.
+ * Generates the Cartesian product of input `iterables`.
  *
  * @description
  * Roughly equivalent to nested `for...of` loops, where each loop uses one of the inputs
  * to provide the element at the corresponding position in the yielded `Array`.
  *
  * The nested loops cycle like an odometer, with the rightmost element advancing on every iteration.
- * This pattern creates a lexicographic ordering so that if the input iterables are sorted,
+ * This pattern creates a lexicographic ordering so that if the input `iterables` are sorted,
  * the product tuples are emitted in sorted order.
  *
  * To compute the product of an iterable with itself, specify the number of repetitions

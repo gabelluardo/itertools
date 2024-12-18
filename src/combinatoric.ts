@@ -319,3 +319,93 @@ export function* permutationsWithReplacement<T>(
     yield result.slice();
   }
 }
+
+/**
+ * Generates the Cartesian product of input iterables.
+ *
+ * @description
+ * Roughly equivalent to nested `for...of` loops, where each loop uses one of the inputs
+ * to provide the element at the corresponding position in the yielded `Array`.
+ *
+ * The nested loops cycle like an odometer, with the rightmost element advancing on every iteration.
+ * This pattern creates a lexicographic ordering so that if the input iterables are sorted,
+ * the product tuples are emitted in sorted order.
+ *
+ * To compute the product of an iterable with itself, specify the number of repetitions
+ * with the optional `repeat` keyword argument. For example, `product(A, repeat=4)` means the same as `product(A, A, A, A)`.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const sequences = [...product([[1, 2, 3], [4, 5, 6], [7, 8, 9]])];
+ *
+ * assertEquals(sequences, [
+ *   [1, 4, 7], [1, 4, 8], [1, 4, 9],
+ *   [1, 5, 7], [1, 5, 8], [1, 5, 9],
+ *   [1, 6, 7], [1, 6, 8], [1, 6, 9],
+ *   [2, 4, 7], [2, 4, 8], [2, 4, 9],
+ *   [2, 5, 7], [2, 5, 8], [2, 5, 9],
+ *   [2, 6, 7], [2, 6, 8], [2, 6, 9],
+ *   [3, 4, 7], [3, 4, 8], [3, 4, 9],
+ *   [3, 5, 7], [3, 5, 8], [3, 5, 9],
+ *   [3, 6, 7], [3, 6, 8], [3, 6, 9],
+ * ]);
+ * ```
+ *
+ * @param iterables - An array of iterables to compute the Cartesian product of.
+ * @param repeat - An optional number of times to repeat the input iterables.
+ * @returns A generator yielding tuples representing the Cartesian product.
+ * @throws {RangeError} If the repeat argument is not a non-negative integer.
+ */
+export function* product<T extends unknown[]>(
+  iterables: { [K in keyof T]: Iterable<T[K]> },
+  repeat?: number,
+): Generator<T> {
+  if (repeat !== undefined && (!Number.isInteger(repeat) || repeat < 0)) {
+    throw new RangeError("repeat argument must be a non-negative integer");
+  }
+
+  const basePools = Array.from(iterables, (pool) => [...pool]);
+
+  const pools = repeat
+    ? Array(repeat).fill(0).flatMap(() => basePools)
+    : basePools;
+  const n = pools.length;
+
+  if (n === 0) {
+    yield [] as unknown as T;
+    return;
+  }
+
+  if (pools.some((pool) => pool.length === 0)) {
+    return;
+  }
+
+  const indices = new Uint32Array(n);
+  yield pools.map((pool) => pool[0]) as T;
+
+  loop: while (true) {
+    for (let i = n - 1; i >= 0; i--) {
+      if (indices[i] === pools[i].length - 1) {
+        continue;
+      }
+
+      const result = Array(n);
+      for (let j = 0; j < i; j++) {
+        result[j] = pools[j][indices[j]];
+      }
+
+      result[i] = pools[i][++indices[i]];
+      for (let j = i + 1; j < n; j++) {
+        indices[j] = 0;
+        result[j] = pools[j][0];
+      }
+
+      yield result as T;
+      continue loop;
+    }
+
+    return;
+  }
+}

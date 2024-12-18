@@ -130,16 +130,23 @@ assertEquals(sequences, [
 ]);
 ```
 
-<!-- ### Cartesian Product
+### Cartesian Product
 
-Roughly equivalent to running nested `for...of` loops using one of the inputs to
-provide the element at each index for the yielded `Array`.
+Generates the Cartesian product of input iterables. Roughly equivalent to nested
+`for...of` loops, where each loop uses one of the inputs to provide the element
+at the corresponding position in the yielded `Array`.
 
 ```ts
 import { assertEquals } from "@std/assert";
 import { product } from "jsr:@gabelluardo/itertools";
 
-const sequences = [...product([1, 2, 3], [4, 5, 6], [7, 8, 9])];
+const sequences = [
+  ...product([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+  ]),
+];
 
 assertEquals(sequences, [
   [1, 4, 7],
@@ -170,7 +177,7 @@ assertEquals(sequences, [
   [3, 6, 8],
   [3, 6, 9],
 ]);
-``` -->
+```
 
 <!-- ### Power Set
 

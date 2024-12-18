@@ -4,7 +4,7 @@ import { factorial, range } from "./utils.ts";
 import { combinations, combinationsWithReplacement } from "../mod.ts";
 import { permutations } from "../mod.ts";
 
-Deno.test("r = NaN", () => {
+Deno.test("combinations() r = NaN", () => {
   assertThrows(
     () => [...combinations("abc", Number.NaN)],
     RangeError,
@@ -12,7 +12,7 @@ Deno.test("r = NaN", () => {
   );
 });
 
-Deno.test("r = Infinity", () => {
+Deno.test("combinations() r = Infinity", () => {
   assertThrows(
     () => [...combinations("abc", Number.POSITIVE_INFINITY)],
     RangeError,
@@ -20,7 +20,7 @@ Deno.test("r = Infinity", () => {
   );
 });
 
-Deno.test("r = Math.PI", () => {
+Deno.test("combinations() r = Math.PI", () => {
   assertThrows(
     () => [...combinations("abc", Math.PI)],
     RangeError,
@@ -28,7 +28,7 @@ Deno.test("r = Math.PI", () => {
   );
 });
 
-Deno.test("r = -1", () => {
+Deno.test("combinations() r = -1", () => {
   assertThrows(
     () => [...combinations("abc", -1)],
     RangeError,
@@ -36,35 +36,35 @@ Deno.test("r = -1", () => {
   );
 });
 
-Deno.test("n = r = 0", () => {
+Deno.test("combinations() n = r = 0", () => {
   const actual = [...combinations("", 0)];
   const expected = [[]];
   assertEquals(actual, expected);
 });
 
-Deno.test("r = 0", () => {
+Deno.test("combinations() r = 0", () => {
   const actual = [...combinations("abc", 0)];
   const expected = [[]];
   assertEquals(actual, expected);
 });
 
-Deno.test("n = 0", () => {
+Deno.test("combinations() n = 0", () => {
   const actual = [...combinations("", 1)];
   assertEquals(actual, []);
 });
 
-Deno.test("r > n", () => {
+Deno.test("combinations() r > n", () => {
   const actual = [...combinations("abc", 32)];
   assertEquals(actual, []);
 });
 
-Deno.test("n = r", () => {
+Deno.test("combinations() n = r", () => {
   const actual = [...combinations("abc", 3)];
   const expected = [["a", "b", "c"]];
   assertEquals(actual, expected);
 });
 
-Deno.test("r < n", () => {
+Deno.test("combinations() r < n", () => {
   const actual = [...combinations([0, 1, 2, 3], 3)];
   const expected = [
     [0, 1, 2],
@@ -78,7 +78,7 @@ Deno.test("r < n", () => {
 for (let n = 0; n < 8; n++) {
   const iterable = range(n);
   for (let r = 0; r < 8; r++) {
-    Deno.test(`comb(${n}, ${r})`, () => {
+    Deno.test(`combinations() comb(${n}, ${r})`, () => {
       const actual = [...combinations(iterable, r)];
       const expectedLength = comb(n, r);
       assertStrictEquals(actual.length, expectedLength);
@@ -89,7 +89,7 @@ for (let n = 0; n < 8; n++) {
 for (let n = 0; n < 8; n++) {
   const iterable = range(n);
   for (let r = 0; r < 8; r++) {
-    Deno.test(`combinations1([${iterable}], ${r})`, () => {
+    Deno.test(`combinations() combinations1([${iterable}], ${r})`, () => {
       const actual = [...combinations(iterable, r)];
       const expected1 = [...combinations1(iterable, r)];
       assertEquals(actual, expected1);
@@ -100,7 +100,7 @@ for (let n = 0; n < 8; n++) {
 for (let n = 0; n < 8; n++) {
   const iterable = range(n);
   for (let r = 0; r < 8; r++) {
-    Deno.test(`combinations2([${iterable}], ${r})`, () => {
+    Deno.test(`combinations() combinations2([${iterable}], ${r})`, () => {
       const actual = [...combinations(iterable, r)];
       const expected2 = [...combinations2(iterable, r)];
       assertEquals(actual, expected2);

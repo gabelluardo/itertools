@@ -29,6 +29,11 @@ Deno.test("cycle() preserves object references", () => {
   assertEquals(cycler.next().value, obj);
 });
 
+Deno.test("cycle() empty iterable", () => {
+  const cycler = cycle([]);
+  assertEquals(cycler.next().done, true);
+});
+
 Deno.test("count() generates arithmetic sequence", () => {
   const counter = count();
   assertEquals(counter.next().value, 0);
@@ -105,4 +110,14 @@ Deno.test("repeat() negative times", () => {
 Deno.test("repeat() using spread operator", () => {
   const repeater = repeat("x", 3);
   assertEquals([...repeater], ["x", "x", "x"]);
+});
+
+Deno.test("repeat() repeat indefinitely", () => {
+  const repeater = repeat("x");
+  let i = 0;
+  for (const v of repeater) {
+    assertEquals(v, "x");
+
+    if (i++ > 10_000) break;
+  }
 });

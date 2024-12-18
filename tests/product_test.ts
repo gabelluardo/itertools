@@ -1,9 +1,46 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { range } from "./utils.ts";
 import { product } from "../mod.ts";
 
+Deno.test("product() r = NaN", () => {
+  assertThrows(
+    () => [...product(["abc"], Number.NaN)],
+    RangeError,
+    "repeat argument must be a non-negative integer",
+  );
+});
+
+Deno.test("product() r = Infinity", () => {
+  assertThrows(
+    () => [...product(["abc"], Number.POSITIVE_INFINITY)],
+    RangeError,
+    "repeat argument must be a non-negative integer",
+  );
+});
+
+Deno.test("product() r = Math.PI", () => {
+  assertThrows(
+    () => [...product(["abc"], Math.PI)],
+    RangeError,
+    "repeat argument must be a non-negative integer",
+  );
+});
+
+Deno.test("product() r = -1", () => {
+  assertThrows(
+    () => [...product(["abc"], -1)],
+    RangeError,
+    "repeat argument must be a non-negative integer",
+  );
+});
+
 Deno.test("product() no iterables", () => {
   const actual = [...product([""])];
+  assertEquals(actual, []);
+});
+
+Deno.test("product() no iterables", () => {
+  const actual = [...product([])];
   assertEquals(actual, []);
 });
 
@@ -94,7 +131,7 @@ Deno.test("product() range(2)", () => {
   );
 });
 
-Deno.test("product() range(2)", () => {
+Deno.test("product() repeat", () => {
   const actual1 = [...product(["A"], 4)];
   const actual2 = [...product(["A", "A", "A", "A"] as string[])];
 

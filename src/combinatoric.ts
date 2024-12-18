@@ -280,7 +280,7 @@ export function* permutations<T>(
  */
 export function* permutationsWithReplacement<T>(
   iterable: Iterable<T>,
-  r: number,
+  r?: number,
 ): Generator<T[]> {
   if (r !== undefined && (!Number.isInteger(r) || r < 0)) {
     throw new RangeError("r must be a non-negative integer");
@@ -373,12 +373,7 @@ export function* product<T extends unknown[]>(
     : basePools;
   const n = pools.length;
 
-  if (n === 0) {
-    yield [] as unknown as T;
-    return;
-  }
-
-  if (pools.some((pool) => pool.length === 0)) {
+  if (n === 0 || pools.some((pool) => pool.length === 0)) {
     return;
   }
 

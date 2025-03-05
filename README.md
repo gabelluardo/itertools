@@ -179,6 +179,26 @@ assertEquals(sequences, [
 ]);
 ```
 
+### Accumulate
+
+Creates an iterator that returns accumulated sums or accumulated results from
+custom functions.
+
+The function defaults to addition. The function should accept two arguments, an
+accumulated total and a value from the iterable.
+
+If an initial value is provided, the accumulation will start with that value and
+the output will have one more element than the input iterable.
+
+```typescript
+import { assertEquals } from "@std/assert";
+import { accumulate } from "jsr:@gabelluardo/itertools";
+
+const sums = [...accumulate([1, 2, 3, 4])];
+
+assertEquals(sums, [1, 3, 6, 10]);
+```
+
 <!-- ### Power Set
 
 The set of all subsets of the given `iterable`. Equivalent to running

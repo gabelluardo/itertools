@@ -647,3 +647,69 @@ export function tee<T>(
 
   return result;
 }
+
+/**
+ * Creates an iterator that aggregates elements from each of the iterables.
+ *
+ * @description
+ * If the iterables are of uneven length, missing values are filled-in with fillvalue.
+ * If not specified, fillvalue defaults to undefined.
+ * Iteration continues until the longest iterable is exhausted.
+ *
+ * If one of the iterables is potentially infinite, then the zipLongest() function
+ * should be wrapped with something that limits the number of calls (for example
+ * islice() or takewhile()).
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const result = [...zipLongest([['A', 'B', 'C', 'D'], ['x', 'y']], '-')];
+ * // result: [['A', 'x'], ['B', 'y'], ['C', '-'], ['D', '-']]
+ *
+ * const numbers = [...zipLongest([[1, 2], [3, 4, 5, 6]], 0)];
+ * // numbers: [[1, 3], [2, 4], [0, 5], [0, 6]]
+ *
+ * const mixed = [...zipLongest([['A', 'B', 'C'], ['1', '2', '3', '4'], ['true', 'false']])];
+ * // mixed: [['A', '1', 'true'], ['B', '2', 'false'], ['C', '3', undefined], [undefined, '4', undefined]]
+ * ```
+ *
+ * @param iterables - Array of iterables to zip together
+ * @param fillvalue - Value used to pad shorter iterables (default: undefined)
+ * @returns A generator that produces arrays of aggregated elements
+ */
+export function* zipLongest<T>(
+  iterables: Iterable<T>[],
+  fillvalue?: T,
+): Generator<T[]> {
+  if (iterables.length === 0) {
+    return;
+  }
+
+  const iterators = iterables.map((iterable) => iterable[Symbol.iterator]());
+  let numActive = iterators.length;
+
+  while (true) {
+    const values: T[] = [];
+
+    for (let i = 0; i < iterators.length; i++) {
+      const result = iterators[i].next();
+
+      if (result.done) {
+        numActive--;
+        if (numActive === 0) {
+          return;
+        }
+        // Replace exhausted iterator with one that yields fillvalue indefinitely
+        iterators[i] = (function* () {
+          while (true) yield fillvalue as T;
+        })();
+        values.push(fillvalue as T);
+      } else {
+        values.push(result.value);
+      }
+    }
+
+    yield values;
+  }
+}

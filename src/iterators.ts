@@ -99,3 +99,32 @@ export function* batched<T>(
     yield batch;
   }
 }
+
+/**
+ * Creates an iterator that returns elements from the first iterable until it is exhausted,
+ * then proceeds to the next iterable, until all the iterables are exhausted.
+ *
+ * @description
+ * Used for treating consecutive sequences as a single sequence.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const result = [...chain(['ABC', 'DEF'])];
+ * // result: ['A', 'B', 'C', 'D', 'E', 'F']
+ *
+ * const numbers = [...chain([[1, 2], [3, 4], [5]])];
+ * // numbers: [1, 2, 3, 4, 5]
+ * ```
+ *
+ * @param iterables - The iterables to chain together
+ * @returns A generator that produces elements from all iterables in sequence
+ */
+export function* chain<T>(
+  ...iterables: Iterable<T>[]
+): Generator<T> {
+  for (const iterable of iterables) {
+    yield* iterable;
+  }
+}

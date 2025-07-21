@@ -128,3 +128,45 @@ export function* chain<T>(
     yield* iterable;
   }
 }
+
+/**
+ * Creates an iterator that filters elements from data returning only those that have a corresponding
+ * truthy element in selectors.
+ *
+ * @description
+ * The operation is similar to filter() but the filtering criteria comes from another iterable.
+ * Stops when either the data or selectors iterables are exhausted.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const result = [...compress('ABCDEF', [1, 0, 1, 0, 1, 1])];
+ * // result: ['A', 'C', 'E', 'F']
+ *
+ * const numbers = [...compress([1, 2, 3, 4, 5], [true, false, true, false, true])];
+ * // numbers: [1, 3, 5]
+ * ```
+ *
+ * @param data - The input iterable to filter
+ * @param selectors - The iterable of truthy/falsy values used for filtering
+ * @returns A generator that produces filtered elements from data
+ */
+export function* compress<T>(
+  data: Iterable<T>,
+  selectors: Iterable<unknown>,
+): Generator<T> {
+  const dataIterator = data[Symbol.iterator]();
+  const selectorsIterator = selectors[Symbol.iterator]();
+
+  while (true) {
+    const dataItem = dataIterator.next();
+    const selectorItem = selectorsIterator.next();
+
+    if (dataItem.done || selectorItem.done) break;
+
+    if (selectorItem.value) {
+      yield dataItem.value;
+    }
+  }
+}

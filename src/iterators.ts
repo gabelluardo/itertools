@@ -54,6 +54,17 @@ export function* accumulate<T>(
  *
  * Loops over the input iterable and accumulates data into array up to size n. The input is consumed lazily, just enough to fill a batch. The result is yielded as soon as the batch is full or when the input iterable is exhausted:
  *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const batches = [...batched([1, 2, 3, 4, 5], 2)];
+ * // batches: [[1, 2], [3, 4], [5]]
+ *
+ * const strictBatches = [...batched(['A', 'B', 'C', 'D'], 2, true)];
+ * // strictBatches: [['A', 'B'], ['C', 'D']]
+ * ```
+ *
  * @param iterable - The input iterable to batch
  * @param n - The size of each batch
  * @param strict - If true, raises an error if the final batch is shorter than n

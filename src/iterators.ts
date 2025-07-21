@@ -417,3 +417,41 @@ export function* groupby<T, K = T>(
     }
   }
 }
+
+/**
+ * Creates an iterator that returns successive overlapping pairs taken from the input iterable.
+ *
+ * @description
+ * The number of 2-tuples in the output iterator will be one fewer than the number of
+ * inputs. It will be empty if the input iterable has fewer than two elements.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const pairs = [...pairwise('ABCDEFG')];
+ * // pairs: [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'E'], ['E', 'F'], ['F', 'G']]
+ *
+ * const numbers = [...pairwise([1, 2, 3, 4, 5])];
+ * // numbers: [[1, 2], [2, 3], [3, 4], [4, 5]]
+ * ```
+ *
+ * @param iterable - The input iterable
+ * @returns A generator that produces pairs of consecutive elements
+ */
+export function* pairwise<T>(
+  iterable: Iterable<T>,
+): Generator<[T, T]> {
+  const iterator = iterable[Symbol.iterator]();
+
+  const first = iterator.next();
+  if (first.done) return;
+
+  let a = first.value;
+
+  for (let item = iterator.next(); !item.done; item = iterator.next()) {
+    const b = item.value;
+    yield [a, b];
+    a = b;
+  }
+}

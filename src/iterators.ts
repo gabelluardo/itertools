@@ -250,6 +250,92 @@ export function* filterfalse<T>(
 }
 
 /**
+ * Creates an iterator that returns selected elements from the iterable.
+ *
+ * @description
+ * Works like sequence slicing but does not support negative values for start, stop, or step.
+ *
+ * If start is zero or undefined, iteration starts at zero. Otherwise, elements from the
+ * iterable are skipped until start is reached.
+ *
+ * If stop is undefined, iteration continues until the input is exhausted. Otherwise,
+ * it stops at the specified position. If stop is null, iteration continues until the
+ * input is exhausted.
+ *
+ * If step is undefined, the step defaults to one. Elements are returned consecutively
+ * unless step is set higher than one which results in items being skipped.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * // islice('ABCDEFG', 2) → A B
+ * const first2 = [...islice('ABCDEFG', 2)];
+ * // first2: ['A', 'B']
+ *
+ * // islice('ABCDEFG', 2, 4) → C D
+ * const middle = [...islice('ABCDEFG', 2, 4)];
+ * // middle: ['C', 'D']
+ *
+ * // islice('ABCDEFG', undefined, 3) → A B C
+ * const fromStart = [...islice('ABCDEFG', undefined, 3)];
+ * // fromStart: ['A', 'B', 'C']
+ *
+ * // islice('ABCDEFG', 2, null) → C D E F G
+ * const fromIndex2 = [...islice('ABCDEFG', 2, null)];
+ * // fromIndex2: ['C', 'D', 'E', 'F', 'G']
+ *
+ * // islice('ABCDEFG', undefined, null, 2) → A C E G
+ * const everyOther = [...islice('ABCDEFG', undefined, null, 2)];
+ * // everyOther: ['A', 'C', 'E', 'G']
+ * ```
+ *
+ * @param iterable - The input iterable to slice
+ * @param start - Starting index (or stop if only one argument provided), undefined defaults to 0
+ * @param stop - Stopping index (optional), null means continue to end
+ * @param step - Step size (optional, defaults to 1)
+ * @returns A generator that produces selected elements from the iterable
+ * @throws {Error} When start, stop, or step have invalid values
+ */
+export function* islice<T>(
+  iterable: Iterable<T>,
+  start?: number,
+  stop?: number | null,
+  step?: number,
+): Generator<T> {
+  // Handle the case where only stop is provided (start defaults to 0)
+  if (stop === undefined) {
+    stop = start;
+    start = 0;
+  }
+
+  start = start ?? 0;
+  step = step ?? 1;
+
+  if (
+    start < 0 || (stop !== undefined && stop !== null && stop < 0) || step <= 0
+  ) {
+    throw new Error(
+      "islice() arguments must be non-negative and step must be positive",
+    );
+  }
+
+  let index = 0;
+
+  for (const item of iterable) {
+    if (stop !== undefined && stop !== null && index >= stop) {
+      break;
+    }
+
+    if (index >= start && (index - start) % step === 0) {
+      yield item;
+    }
+
+    index++;
+  }
+}
+
+/**
  * Creates an iterator that returns consecutive keys and groups from the iterable.
  *
  * @description

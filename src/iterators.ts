@@ -491,3 +491,37 @@ export function* starmap<TArgs extends readonly unknown[], TResult>(
     yield func(...args);
   }
 }
+
+/**
+ * Creates an iterator that returns elements from the iterable as long as the predicate is true.
+ *
+ * @description
+ * The iterator stops when the predicate first becomes false and doesn't continue further,
+ * even if subsequent elements would satisfy the predicate. This is the complement of dropwhile().
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const result = [...takewhile(x => x < 5, [1, 4, 6, 3, 8])];
+ * // result: [1, 4]
+ *
+ * const words = [...takewhile(x => x.length < 4, ['a', 'bb', 'ccc', 'dddd', 'ee'])];
+ * // words: ['a', 'bb', 'ccc']
+ * ```
+ *
+ * @param predicate - The function that tests each element
+ * @param iterable - The input iterable
+ * @returns A generator that produces elements while the predicate is true
+ */
+export function* takewhile<T>(
+  predicate: (value: T) => boolean,
+  iterable: Iterable<T>,
+): Generator<T> {
+  for (const item of iterable) {
+    if (!predicate(item)) {
+      break;
+    }
+    yield item;
+  }
+}

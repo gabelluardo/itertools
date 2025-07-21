@@ -170,3 +170,44 @@ export function* compress<T>(
     }
   }
 }
+
+/**
+ * Creates an iterator that drops elements from the iterable while the predicate is true;
+ * afterwards, returns every element.
+ *
+ * @description
+ * The iterator does not produce any output until the predicate first becomes false,
+ * so it may have a lengthy start-up time.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const result = [...dropwhile(x => x < 5, [1, 4, 6, 3, 8])];
+ * // result: [6, 3, 8]
+ *
+ * const words = [...dropwhile(x => x.length < 4, ['a', 'bb', 'ccc', 'dddd', 'ee'])];
+ * // words: ['dddd', 'ee']
+ * ```
+ *
+ * @param predicate - The function that tests each element
+ * @param iterable - The input iterable
+ * @returns A generator that produces elements after the predicate becomes false
+ */
+export function* dropwhile<T>(
+  predicate: (value: T) => boolean,
+  iterable: Iterable<T>,
+): Generator<T> {
+  const iterator = iterable[Symbol.iterator]();
+
+  for (let item = iterator.next(); !item.done; item = iterator.next()) {
+    if (!predicate(item.value)) {
+      yield item.value;
+      break;
+    }
+  }
+
+  for (let item = iterator.next(); !item.done; item = iterator.next()) {
+    yield item.value;
+  }
+}

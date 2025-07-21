@@ -46,3 +46,45 @@ export function* accumulate<T>(
     yield total;
   }
 }
+
+/**
+ * Batch data from the iterable into tuples of length n. The last batch may be shorter than n.
+ *
+ * If strict is true, will raise an Error if the final batch is shorter than n.
+ *
+ * Loops over the input iterable and accumulates data into array up to size n. The input is consumed lazily, just enough to fill a batch. The result is yielded as soon as the batch is full or when the input iterable is exhausted:
+ *
+ * @param iterable - The input iterable to batch
+ * @param n - The size of each batch
+ * @param strict - If true, raises an error if the final batch is shorter than n
+ * @returns A generator that produces batches as arrays
+ * @throws {Error} When n is not a positive integer or when strict is true and the final batch is incomplete
+ */
+export function* batched<T>(
+  iterable: Iterable<T>,
+  n: number,
+  strict = false,
+): Generator<T[]> {
+  if (Number.isNaN(n) || !Number.isFinite(n) || !Number.isInteger(n) || n < 1) {
+    throw new Error("Batch size must be a positive integer");
+  }
+
+  const iterator = iterable[Symbol.iterator]();
+
+  while (true) {
+    const batch: T[] = [];
+    for (let i = 0; i < n; i++) {
+      const item = iterator.next();
+      if (item.done) break;
+      batch.push(item.value);
+    }
+
+    if (batch.length === 0) break;
+
+    if (strict && batch.length !== n) {
+      throw new Error("batched(): incomplete batch");
+    }
+
+    yield batch;
+  }
+}

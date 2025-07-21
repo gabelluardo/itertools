@@ -248,3 +248,86 @@ export function* filterfalse<T>(
     }
   }
 }
+
+/**
+ * Creates an iterator that returns consecutive keys and groups from the iterable.
+ *
+ * @description
+ * The key is a function computing a key value for each element. If not specified,
+ * key defaults to an identity function and returns the element unchanged.
+ * Generally, the iterable needs to already be sorted on the same key function.
+ *
+ * The operation of groupby() is similar to the uniq filter in Unix. It generates
+ * a break or new group every time the value of the key function changes (which is
+ * why it is usually necessary to have sorted the data using the same key function).
+ *
+ * The returned group is itself an iterator that shares the underlying iterable with
+ * groupby(). Because the source is shared, when the groupby() object is advanced,
+ * the previous group is no longer visible. So, if that data is needed later, it
+ * should be stored as a list.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * // Basic grouping
+ * const groups = [...groupby('AAAABBBCCD')];
+ * // groups: [['A', ['A', 'A', 'A', 'A']], ['B', ['B', 'B', 'B']], ['C', ['C', 'C']], ['D', ['D']]]
+ *
+ * // Grouping with custom key function
+ * const data = [1.1, 1.2, 2.1, 2.2, 3.1];
+ * const keyGroups = [...groupby(data, Math.floor)];
+ * // keyGroups: [[1, [1.1, 1.2]], [2, [2.1, 2.2]], [3, [3.1]]]
+ * ```
+ *
+ * @param iterable - The input iterable to group
+ * @param key - Function to compute a key value for each element (default: identity function)
+ * @returns A generator that produces [key, group] pairs
+ */
+export function* groupby<T, K = T>(
+  iterable: Iterable<T>,
+  key?: (value: T) => K,
+): Generator<[K, Generator<T>]> {
+  const keyfunc = key ?? ((x: T) => x as unknown as K);
+  const iterator = iterable[Symbol.iterator]();
+
+  let exhausted = false;
+  let currValue: T;
+  let currKey: K;
+
+  function* _grouper(targetKey: K): Generator<T> {
+    yield currValue;
+
+    for (let item = iterator.next(); !item.done; item = iterator.next()) {
+      currValue = item.value;
+      currKey = keyfunc(currValue);
+
+      if (currKey !== targetKey) {
+        return;
+      }
+
+      yield currValue;
+    }
+
+    exhausted = true;
+  }
+
+  const first = iterator.next();
+  if (first.done) return;
+
+  currValue = first.value;
+  currKey = keyfunc(currValue);
+
+  while (!exhausted) {
+    const targetKey = currKey;
+    const currGroup = _grouper(targetKey);
+    yield [currKey, currGroup];
+
+    // If the key hasn't changed, we need to exhaust the current group
+    if (currKey === targetKey) {
+      for (const _ of currGroup) {
+        // Exhaust the group iterator
+      }
+    }
+  }
+}

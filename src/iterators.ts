@@ -455,3 +455,39 @@ export function* pairwise<T>(
     a = b;
   }
 }
+
+/**
+ * Creates an iterator that computes the function using arguments obtained from the iterable.
+ *
+ * @description
+ * Used instead of Array.prototype.map() when argument parameters have already been "pre-zipped" into tuples.
+ * The difference between map() and starmap() parallels the distinction between function(a,b)
+ * and function(...args). Each element of the iterable should be a tuple/array that can be
+ * spread as arguments to the function.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const powers = [...starmap(Math.pow, [[2, 5], [3, 2], [10, 3]])];
+ * // powers: [32, 9, 1000]
+ *
+ * const sums = [...starmap((a, b, c) => a + b + c, [[1, 2, 3], [4, 5, 6]])];
+ * // sums: [6, 15]
+ *
+ * const products = [...starmap((x, y) => x * y, [[2, 3], [4, 5], [6, 7]])];
+ * // products: [6, 20, 42]
+ * ```
+ *
+ * @param func - The function to apply to each set of arguments
+ * @param iterable - The input iterable containing arrays/tuples of arguments
+ * @returns A generator that produces the results of applying func to each argument set
+ */
+export function* starmap<TArgs extends readonly unknown[], TResult>(
+  func: (...args: TArgs) => TResult,
+  iterable: Iterable<TArgs>,
+): Generator<TResult> {
+  for (const args of iterable) {
+    yield func(...args);
+  }
+}

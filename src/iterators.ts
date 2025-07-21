@@ -211,3 +211,40 @@ export function* dropwhile<T>(
     yield item.value;
   }
 }
+
+/**
+ * Creates an iterator that filters elements from the iterable returning only those for which
+ * the predicate is false.
+ *
+ * @description
+ * This is the opposite of the built-in filter() function. It returns elements where
+ * the predicate returns false. If predicate is null or undefined, it will filter out
+ * truthy values and return only falsy values.
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * const result = [...filterfalse(x => x < 5, [1, 4, 6, 3, 8])];
+ * // result: [6, 8]
+ *
+ * const withNull = [...filterfalse(null, [0, 1, false, true, '', 'hello'])];
+ * // withNull: [0, false, '']
+ * ```
+ *
+ * @param predicate - The function that tests each element, or null for falsy filtering
+ * @param iterable - The input iterable
+ * @returns A generator that produces elements where the predicate is false
+ */
+export function* filterfalse<T>(
+  predicate: ((value: T) => boolean) | null,
+  iterable: Iterable<T>,
+): Generator<T> {
+  const predicateFunc = predicate ?? ((x: T) => Boolean(x));
+
+  for (const item of iterable) {
+    if (!predicateFunc(item)) {
+      yield item;
+    }
+  }
+}

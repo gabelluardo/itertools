@@ -5,14 +5,11 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  schedule:
-    - cron: "0 0 * * 0"
+  workflow_dispatch:
 
 jobs:
   fmt:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
 
     steps:
       - uses: actions/checkout@v2
@@ -49,7 +46,7 @@ jobs:
 
       - name: Coverage
         if: matrix.os == 'ubuntu-latest'
-        run: deno coverage --exclude="tests/*" --lcov cov/ > cov.lcov
+        run: deno coverage --exclude="tests/*,utils/*" --lcov cov/ > cov.lcov
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

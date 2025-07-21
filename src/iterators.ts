@@ -525,3 +525,125 @@ export function* takewhile<T>(
     yield item;
   }
 }
+
+/**
+ * Internal class for tee implementation
+ * @internal
+ */
+class _Tee<T> {
+  private iterator: Iterator<T>;
+  private link: [T | undefined, _TeeLink<T> | null];
+
+  constructor(iterable: Iterable<T> | _Tee<T>) {
+    if (iterable instanceof _Tee) {
+      // Flattening step: if input is already a tee iterator, reuse its underlying data
+      this.iterator = iterable.iterator;
+      this.link = iterable.link;
+    } else {
+      this.iterator = iterable[Symbol.iterator]();
+      this.link = [undefined, null];
+    }
+  }
+
+  [Symbol.iterator](): Iterator<T> {
+    return this;
+  }
+
+  next(): IteratorResult<T> {
+    const link = this.link;
+    if (link[1] === null) {
+      // Need to advance the shared iterator
+      const result = this.iterator.next();
+      if (result.done) {
+        return { done: true, value: undefined };
+      }
+      link[0] = result.value;
+      link[1] = [undefined, null];
+    }
+
+    const value = link[0]!;
+    this.link = link[1]!;
+    return { done: false, value };
+  }
+}
+
+type _TeeLink<T> = [T | undefined, _TeeLink<T> | null];
+
+/**
+ * Return n independent iterators from a single iterable.
+ *
+ * @description
+ * Creates multiple independent iterators that can traverse the same data sequence.
+ * Each iterator maintains its own position, allowing you to iterate through the same
+ * data multiple times or at different rates.
+ *
+ * When the input iterable is already a tee iterator object, all members of the return
+ * tuple are constructed as if they had been produced by the upstream tee() call.
+ * This "flattening step" allows nested tee() calls to share the same underlying data
+ * chain and to have a single update step rather than a chain of calls.
+ *
+ * **Warning**: tee iterators are not threadsafe. This implementation may require
+ * significant auxiliary storage depending on how much temporary data needs to be stored.
+ * In general, if one iterator uses most or all of the data before another iterator starts,
+ * it is faster to use Array.from() instead of tee().
+ *
+ * @example
+ * ```ts
+ * import { assertEquals } from "@std/assert";
+ *
+ * // Basic usage with 2 iterators
+ * const [iter1, iter2] = tee([1, 2, 3, 4]);
+ *
+ * const firstPass = [...iter1];
+ * // firstPass: [1, 2, 3, 4]
+ *
+ * const secondPass = [...iter2];
+ * // secondPass: [1, 2, 3, 4]
+ *
+ * // Create 3 independent iterators
+ * const [a, b, c] = tee('ABC', 3);
+ *
+ * assertEquals([...a], ['A', 'B', 'C']);
+ * assertEquals([...b], ['A', 'B', 'C']);
+ * assertEquals([...c], ['A', 'B', 'C']);
+ *
+ * // Peekable iterator pattern example
+ * const [iterator] = tee("abcdef", 1);
+ *
+ * // Move iterator forward
+ * iterator.next().value; // 'a'
+ *
+ * // Create a forked iterator to peek ahead
+ * const [forked] = tee(iterator, 1);
+ * const peekedValue = forked.next().value; // 'b'
+ *
+ * // Continue with original iterator
+ * iterator.next().value; // 'b'
+ * ```
+ *
+ * @param iterable - The input iterable to split into multiple iterators
+ * @param n - Number of independent iterators to create (default: 2)
+ * @returns An array of n independent iterators
+ * @throws {Error} When n is negative
+ */
+export function tee<T>(
+  iterable: Iterable<T>,
+  n = 2,
+): _Tee<T>[] {
+  if (n < 0) {
+    throw new Error("n must be non-negative");
+  }
+
+  if (n === 0) {
+    return [];
+  }
+
+  const iterator = new _Tee(iterable);
+  const result: _Tee<T>[] = [iterator];
+
+  for (let i = 1; i < n; i++) {
+    result.push(new _Tee(iterator));
+  }
+
+  return result;
+}

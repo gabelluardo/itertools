@@ -1,3 +1,5 @@
+// deno-coverage-ignore-file
+
 /** Returns an array of length `n` containing elements `0` through `n - 1`. */
 export function range(n: number): number[] {
   if (!Number.isInteger(n) || n < 0) {

@@ -81,3 +81,34 @@ Deno.test("batched() batch size = 1", () => {
   const result = Array.from(batched([1, 2, 3], 1));
   assertEquals(result, [[1], [2], [3]]);
 });
+
+Deno.test("batched() strict mode - complete batches", () => {
+  const result = Array.from(batched([1, 2, 3, 4], 2, true));
+  assertEquals(result, [[1, 2], [3, 4]]);
+});
+
+Deno.test("batched() strict mode - incomplete batch throws error", () => {
+  assertThrows(
+    () => Array.from(batched([1, 2, 3, 4, 5], 2, true)),
+    Error,
+    "batched(): incomplete batch",
+  );
+});
+
+Deno.test("batched() strict mode - empty array", () => {
+  const result = Array.from(batched([], 3, true));
+  assertEquals(result, []);
+});
+
+Deno.test("batched() strict mode - single incomplete batch throws", () => {
+  assertThrows(
+    () => Array.from(batched([1], 2, true)),
+    Error,
+    "batched(): incomplete batch",
+  );
+});
+
+Deno.test("batched() strict mode - exactly divisible", () => {
+  const result = Array.from(batched([1, 2, 3, 4, 5, 6], 3, true));
+  assertEquals(result, [[1, 2, 3], [4, 5, 6]]);
+});

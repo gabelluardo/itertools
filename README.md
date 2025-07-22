@@ -198,18 +198,3 @@ const sums = [...accumulate([1, 2, 3, 4])];
 
 assertEquals(sums, [1, 3, 6, 10]);
 ```
-
-<!-- ### Power Set
-
-The set of all subsets of the given `iterable`. Equivalent to running
-`combinations` with `0 <= r <= iterable.length` and flattening the results. The
-first subset is the empty set given when `r = 0`.
-
-```ts
-import { assertEquals } from "@std/assert";
-import { powerSet } from "jsr:@gabelluardo/itertools";
-
-const sequences = [...powerSet([1, 2, 3])];
-
-assertEquals(sequences, [[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]]);
-``` -->

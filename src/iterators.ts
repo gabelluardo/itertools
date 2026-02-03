@@ -231,7 +231,7 @@ export function* dropwhile<T>(
  * ```
  *
  * @param iterable - The input iterable
- * @param predicate - The function that tests each element. If not provided, filters out truthy values.
+ * @param predicate - The function that tests each element. If not provided, defaults to Boolean conversion (keeps falsy values).
  * @returns A generator that produces elements where the predicate is false
  */
 export function* filterfalse<T>(

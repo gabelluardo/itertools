@@ -231,7 +231,7 @@ export function* dropwhile<T>(
  * ```
  *
  * @param iterable - The input iterable
- * @param predicate - The function that tests each element, or null for falsy filtering
+ * @param predicate - The function that tests each element. If not provided, defaults to Boolean conversion (keeps falsy values).
  * @returns A generator that produces elements where the predicate is false
  */
 export function* filterfalse<T>(
@@ -295,9 +295,9 @@ export function* filterfalse<T>(
  */
 export function* islice<T>(
   iterable: Iterable<T>,
-  start: number = 0,
+  start = 0,
   stop?: number | null,
-  step: number = 1,
+  step = 1,
 ): Generator<T> {
   // Handle the case where only stop is provided (start defaults to 0)
   if (stop === undefined) {

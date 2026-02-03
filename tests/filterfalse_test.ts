@@ -28,7 +28,7 @@ Deno.test("filterfalse() with empty iterable", () => {
   assertEquals(result, []);
 });
 
-Deno.test("filterfalse() with null predicate - filter truthy values", () => {
+Deno.test("filterfalse() with default predicate - filter truthy values", () => {
   const result = [
     ...filterfalse([0, 1, false, true, "", "hello", null, undefined]),
   ];
@@ -72,7 +72,7 @@ Deno.test("filterfalse() with single element not matching predicate", () => {
   assertEquals(result, [7]);
 });
 
-Deno.test("filterfalse() with mixed types and null predicate", () => {
+Deno.test("filterfalse() with mixed types and default predicate", () => {
   const result = [
     ...filterfalse([0, "hello", false, 42, "", true, null]),
   ];

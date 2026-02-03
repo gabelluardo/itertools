@@ -18,8 +18,8 @@ Deno.test("zipLongest() with three string arrays of different lengths", () => {
   assertEquals(result, [
     ["A", "1", "true"],
     ["B", "2", "false"],
-    ["C", "3", undefined],
-    [undefined, "4", undefined],
+    ["C", "3", null],
+    [null, "4", null],
   ]);
 });
 
@@ -58,9 +58,9 @@ Deno.test("zipLongest() with numeric fillvalue", () => {
   assertEquals(result, [[10, 1], [20, 2], [-1, 3], [-1, 4]]);
 });
 
-Deno.test("zipLongest() with undefined fillvalue (default)", () => {
+Deno.test("zipLongest() with null fillvalue (default)", () => {
   const result = [...zipLongest([["A", "B"], ["x", "y", "z"]])];
-  assertEquals(result, [["A", "x"], ["B", "y"], [undefined, "z"]]);
+  assertEquals(result, [["A", "x"], ["B", "y"], [null, "z"]]);
 });
 
 Deno.test("zipLongest() with boolean fillvalue", () => {

@@ -137,17 +137,17 @@ Deno.test("islice() with step = 1 is same as no step", () => {
   assertEquals(result1, ["B", "C", "D"]);
 });
 
-Deno.test("islice() with start undefined", () => {
-  const result = [...islice("ABCDEF", undefined, 3)];
+Deno.test("islice() with start 0", () => {
+  const result = [...islice("ABCDEF", 0, 3)];
   assertEquals(result, ["A", "B", "C"]);
 });
 
-Deno.test("islice() with start undefined and step", () => {
-  const result = [...islice("ABCDEF", undefined, 6, 2)];
+Deno.test("islice() with start 0 and step", () => {
+  const result = [...islice("ABCDEF", 0, 6, 2)];
   assertEquals(result, ["A", "C", "E"]);
 });
 
-Deno.test("islice() with start undefined and stop null", () => {
-  const result = [...islice("ABCDEF", undefined, undefined, 2)];
+Deno.test("islice() with start 0 and stop null", () => {
+  const result = [...islice("ABCDEF", 0, null, 2)];
   assertEquals(result, ["A", "C", "E"]);
 });

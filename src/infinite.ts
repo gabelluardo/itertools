@@ -20,15 +20,18 @@
  * @param object - The object to repeat
  * @param times - Optional number of times to repeat
  */
-export function* repeat<T>(object: T, times?: number): Generator<T> {
-  if (times === undefined) {
+export function* repeat<T>(
+  object: T,
+  times: number | null = null,
+): Generator<T> {
+  if (times === null) {
     while (true) {
       yield object;
     }
-  } else {
-    for (let i = 0; i < times; i++) {
-      yield object;
-    }
+  }
+
+  for (let i = 0; i < times; i++) {
+    yield object;
   }
 }
 

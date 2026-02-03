@@ -236,10 +236,11 @@ export function* dropwhile<T>(
  */
 export function* filterfalse<T>(
   iterable: Iterable<T>,
-  predicate: (value: T) => boolean = ((x: T) => Boolean(x)),
+  predicate: ((value: T) => boolean) | null = null,
 ): Generator<T> {
+  const pred = predicate ?? ((x: T) => Boolean(x));
   for (const item of iterable) {
-    if (!predicate(item)) {
+    if (!pred(item)) {
       yield item;
     }
   }
@@ -295,9 +296,9 @@ export function* filterfalse<T>(
  */
 export function* islice<T>(
   iterable: Iterable<T>,
-  start: number = 0,
+  start = 0,
   stop?: number | null,
-  step: number = 1,
+  step = 1,
 ): Generator<T> {
   // Handle the case where only stop is provided (start defaults to 0)
   if (stop === undefined) {

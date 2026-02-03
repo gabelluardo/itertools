@@ -231,16 +231,15 @@ export function* dropwhile<T>(
  * ```
  *
  * @param iterable - The input iterable
- * @param predicate - The function that tests each element, or null for falsy filtering
+ * @param predicate - The function that tests each element. If not provided, filters out truthy values.
  * @returns A generator that produces elements where the predicate is false
  */
 export function* filterfalse<T>(
   iterable: Iterable<T>,
-  predicate: ((value: T) => boolean) | null = null,
+  predicate: (value: T) => boolean = ((x: T) => Boolean(x)),
 ): Generator<T> {
-  const pred = predicate ?? ((x: T) => Boolean(x));
   for (const item of iterable) {
-    if (!pred(item)) {
+    if (!predicate(item)) {
       yield item;
     }
   }

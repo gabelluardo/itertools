@@ -26,14 +26,12 @@ import { add } from "./utils/operators.ts";
 export function* accumulate<T>(
   iterable: Iterable<T>,
   func: (total: T, element: T) => T = add,
-  initial?: T,
+  initial: T | null = null,
 ): Generator<T> {
   const iterator = iterable[Symbol.iterator]();
 
-  let total: T;
-  if (initial !== undefined) {
-    total = initial;
-  } else {
+  let total = initial;
+  if (total === null) {
     const first = iterator.next();
     if (first.done) return;
     total = first.value;
@@ -218,32 +216,30 @@ export function* dropwhile<T>(
  *
  * @description
  * This is the opposite of the built-in filter() function. It returns elements where
- * the predicate returns false. If predicate is null or undefined, it will filter out
+ * the predicate returns false. If predicate is not provided, it will filter out
  * truthy values and return only falsy values.
  *
  * @example
  * ```ts
  * import { assertEquals } from "@std/assert";
  *
- * const result = [...filterfalse(x => x < 5, [1, 4, 6, 3, 8])];
+ * const result = [...filterfalse([1, 4, 6, 3, 8], x => x < 5,)];
  * // result: [6, 8]
  *
- * const withNull = [...filterfalse(null, [0, 1, false, true, '', 'hello'])];
+ * const withNull = [...filterfalse([0, 1, false, true, '', 'hello'])];
  * // withNull: [0, false, '']
  * ```
  *
- * @param predicate - The function that tests each element, or null for falsy filtering
  * @param iterable - The input iterable
+ * @param predicate - The function that tests each element, or null for falsy filtering
  * @returns A generator that produces elements where the predicate is false
  */
 export function* filterfalse<T>(
-  predicate: ((value: T) => boolean) | null,
   iterable: Iterable<T>,
+  predicate: (value: T) => boolean = ((x: T) => Boolean(x)),
 ): Generator<T> {
-  const predicateFunc = predicate ?? ((x: T) => Boolean(x));
-
   for (const item of iterable) {
-    if (!predicateFunc(item)) {
+    if (!predicate(item)) {
       yield item;
     }
   }
@@ -255,14 +251,14 @@ export function* filterfalse<T>(
  * @description
  * Works like sequence slicing but does not support negative values for start, stop, or step.
  *
- * If start is zero or undefined, iteration starts at zero. Otherwise, elements from the
+ * If start is not provided, iteration starts at zero. Otherwise, elements from the
  * iterable are skipped until start is reached.
  *
- * If stop is undefined, iteration continues until the input is exhausted. Otherwise,
+ * If stop is not provided, iteration continues until the input is exhausted. Otherwise,
  * it stops at the specified position. If stop is null, iteration continues until the
  * input is exhausted.
  *
- * If step is undefined, the step defaults to one. Elements are returned consecutively
+ * If step is not provided, the step defaults to one. Elements are returned consecutively
  * unless step is set higher than one which results in items being skipped.
  *
  * @example
@@ -277,21 +273,21 @@ export function* filterfalse<T>(
  * const middle = [...islice('ABCDEFG', 2, 4)];
  * // middle: ['C', 'D']
  *
- * // islice('ABCDEFG', undefined, 3) → A B C
- * const fromStart = [...islice('ABCDEFG', undefined, 3)];
+ * // islice('ABCDEFG', 0, 3) → A B C
+ * const fromStart = [...islice('ABCDEFG', 0, 3)];
  * // fromStart: ['A', 'B', 'C']
  *
  * // islice('ABCDEFG', 2, null) → C D E F G
  * const fromIndex2 = [...islice('ABCDEFG', 2, null)];
  * // fromIndex2: ['C', 'D', 'E', 'F', 'G']
  *
- * // islice('ABCDEFG', undefined, null, 2) → A C E G
- * const everyOther = [...islice('ABCDEFG', undefined, null, 2)];
+ * // islice('ABCDEFG', 0, null, 2) → A C E G
+ * const everyOther = [...islice('ABCDEFG', 0, null, 2)];
  * // everyOther: ['A', 'C', 'E', 'G']
  * ```
  *
  * @param iterable - The input iterable to slice
- * @param start - Starting index (or stop if only one argument provided), undefined defaults to 0
+ * @param start - Starting index (or stop if only one argument provided), defaults to 0
  * @param stop - Stopping index (optional), null means continue to end
  * @param step - Step size (optional, defaults to 1)
  * @returns A generator that produces selected elements from the iterable
@@ -299,9 +295,9 @@ export function* filterfalse<T>(
  */
 export function* islice<T>(
   iterable: Iterable<T>,
-  start?: number,
+  start: number = 0,
   stop?: number | null,
-  step?: number,
+  step: number = 1,
 ): Generator<T> {
   // Handle the case where only stop is provided (start defaults to 0)
   if (stop === undefined) {
@@ -309,21 +305,19 @@ export function* islice<T>(
     start = 0;
   }
 
-  start = start ?? 0;
-  step = step ?? 1;
-
   if (
-    start < 0 || (stop !== undefined && stop !== null && stop < 0) || step <= 0
+    start < 0 || (stop !== null && stop < 0) || step <= 0
   ) {
     throw new Error(
       "islice() arguments must be non-negative and step must be positive",
     );
   }
 
-  let index = 0;
+  stop = stop ?? Number.MAX_SAFE_INTEGER;
 
+  let index = 0;
   for (const item of iterable) {
-    if (stop !== undefined && stop !== null && index >= stop) {
+    if (index >= stop) {
       break;
     }
 
@@ -372,9 +366,8 @@ export function* islice<T>(
  */
 export function* groupby<T, K = T>(
   iterable: Iterable<T>,
-  key?: (value: T) => K,
+  key: (value: T) => K = ((x: T) => x as unknown as K),
 ): Generator<[K, Generator<T>]> {
-  const keyfunc = key ?? ((x: T) => x as unknown as K);
   const iterator = iterable[Symbol.iterator]();
 
   let exhausted = false;
@@ -386,7 +379,7 @@ export function* groupby<T, K = T>(
 
     for (let item = iterator.next(); !item.done; item = iterator.next()) {
       currValue = item.value;
-      currKey = keyfunc(currValue);
+      currKey = key(currValue);
 
       if (currKey !== targetKey) {
         return;
@@ -402,7 +395,7 @@ export function* groupby<T, K = T>(
   if (first.done) return;
 
   currValue = first.value;
-  currKey = keyfunc(currValue);
+  currKey = key(currValue);
 
   while (!exhausted) {
     const targetKey = currKey;
@@ -653,7 +646,7 @@ export function tee<T>(
  *
  * @description
  * If the iterables are of uneven length, missing values are filled-in with fillvalue.
- * If not specified, fillvalue defaults to undefined.
+ * If not specified, fillvalue defaults to null.
  * Iteration continues until the longest iterable is exhausted.
  *
  * If one of the iterables is potentially infinite, then the zipLongest() function
@@ -671,16 +664,16 @@ export function tee<T>(
  * // numbers: [[1, 3], [2, 4], [0, 5], [0, 6]]
  *
  * const mixed = [...zipLongest([['A', 'B', 'C'], ['1', '2', '3', '4'], ['true', 'false']])];
- * // mixed: [['A', '1', 'true'], ['B', '2', 'false'], ['C', '3', undefined], [undefined, '4', undefined]]
+ * // mixed: [['A', '1', 'true'], ['B', '2', 'false'], ['C', '3', null], [null, '4', null]]
  * ```
  *
  * @param iterables - Array of iterables to zip together
- * @param fillvalue - Value used to pad shorter iterables (default: undefined)
+ * @param fillvalue - Value used to pad shorter iterables (default: null)
  * @returns A generator that produces arrays of aggregated elements
  */
 export function* zipLongest<T>(
   iterables: Iterable<T>[],
-  fillvalue?: T,
+  fillvalue: T | null = null,
 ): Generator<T[]> {
   if (iterables.length === 0) {
     return;
@@ -695,19 +688,22 @@ export function* zipLongest<T>(
     for (let i = 0; i < iterators.length; i++) {
       const result = iterators[i].next();
 
-      if (result.done) {
-        numActive--;
-        if (numActive === 0) {
-          return;
-        }
-        // Replace exhausted iterator with one that yields fillvalue indefinitely
-        iterators[i] = (function* () {
-          while (true) yield fillvalue as T;
-        })();
-        values.push(fillvalue as T);
-      } else {
+      if (!result.done) {
         values.push(result.value);
+        continue;
       }
+
+      numActive--;
+      if (numActive === 0) {
+        return;
+      }
+
+      // Replace exhausted iterator with one that yields fillvalue indefinitely
+      iterators[i] = (function* () {
+        while (true) yield fillvalue as T;
+      })();
+
+      values.push(fillvalue as T);
     }
 
     yield values;

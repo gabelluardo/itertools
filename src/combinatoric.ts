@@ -196,9 +196,9 @@ export function* combinationsWithReplacement<T>(
  */
 export function* permutations<T>(
   iterable: Iterable<T>,
-  r?: number,
+  r: number | null = null,
 ): Generator<T[]> {
-  if (r !== undefined && (!Number.isInteger(r) || r < 0)) {
+  if (r !== null && (!Number.isInteger(r) || r < 0)) {
     throw new RangeError("r must be a non-negative integer");
   }
 
@@ -229,17 +229,18 @@ export function* permutations<T>(
           [indices[j], index] = [index, indices[j]];
         }
         cycles[i] = n - i;
-      } else {
-        const j = n - cycles[i];
-        [indices[i], indices[j]] = [indices[j], indices[i]];
-
-        const result = Array(len);
-        for (let i = 0; i < len; i++) {
-          result[i] = pool[indices[i]];
-        }
-        yield result;
-        continue loop;
+        continue;
       }
+
+      const j = n - cycles[i];
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+
+      const result = Array(len);
+      for (let i = 0; i < len; i++) {
+        result[i] = pool[indices[i]];
+      }
+      yield result;
+      continue loop;
     }
     return;
   }
@@ -280,9 +281,9 @@ export function* permutations<T>(
  */
 export function* permutationsWithReplacement<T>(
   iterable: Iterable<T>,
-  r?: number,
+  r: number | null = null,
 ): Generator<T[]> {
-  if (r !== undefined && (!Number.isInteger(r) || r < 0)) {
+  if (r !== null && (!Number.isInteger(r) || r < 0)) {
     throw new RangeError("r must be a non-negative integer");
   }
 
@@ -360,9 +361,9 @@ export function* permutationsWithReplacement<T>(
  */
 export function* product<T extends unknown[]>(
   iterables: { [K in keyof T]: Iterable<T[K]> },
-  repeat?: number,
+  repeat: number | null = null,
 ): Generator<T> {
-  if (repeat !== undefined && (!Number.isInteger(repeat) || repeat < 0)) {
+  if (repeat !== null && (!Number.isInteger(repeat) || repeat < 0)) {
     throw new RangeError("repeat argument must be a non-negative integer");
   }
 

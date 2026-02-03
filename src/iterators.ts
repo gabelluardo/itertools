@@ -313,11 +313,9 @@ export function* islice<T>(
     );
   }
 
-  stop = stop ?? Number.MAX_SAFE_INTEGER;
-
   let index = 0;
   for (const item of iterable) {
-    if (index >= stop) {
+    if (stop !== null && index >= stop) {
       break;
     }
 
